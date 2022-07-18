@@ -3,27 +3,35 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd"
 import "./Home.css"
 
 const initialColumns = [
-  {
-    id: 12,
-    title: "To do",
-    tasks: [
-      { id: 34, content: "task 1" },
-      { id: 56, content: "task 2" },
-      { id: 78, content: "task 3" },
-    ],
-  },
-  { id: 34, title: "Doing", tasks: [{ id: 12, content: "Almost done" }] },
-  { id: 56, title: "Done", tasks: [] },
+  { id: 1, title: "To do", tasks: [{ id: 34, content: "task 1" }, { id: 56, content: "task 2" }, { id: 78, content: "task 3" }]},
+
+  { id: 2, title: "Doing", tasks: [{ id: 12, content: "Almost done" }] },
+  { id: 3, title: "Done", tasks: [] },
 ]
 
 export default function Home() {
 
-  const [columns, setColumns] = useState(initialColumns)
+    const [columns, setColumns] = useState(initialColumns)
+
+    
+    function onDragEnd(result) {
+        const columnsDeepCopy = JSON.parse(JSON.stringify(columns))
+        console.log(result)
+
+        for(let i = 0; i < columnsDeepCopy.length; i++) {
+          if (+result.source.droppableId === columnsDeepCopy[i].id) {
+              const spliced = columnsDeepCopy[i].tasks.splice(result.source.index, 1)
+              columnsDeepCopy[i].tasks.splice(result.destination.index, 0, ...spliced)
+            }
+        }
+
+        setColumns(columnsDeepCopy)
+    }
 
   return (
     <div className="wrapper">
-      <DragDropContext>
         <div className="container">
+          <DragDropContext onDragEnd={onDragEnd}>
           {columns.map(column => (
             <Droppable droppableId={column.id.toString()} key={column.id} >
               {(provided) => (
@@ -39,7 +47,7 @@ export default function Home() {
                             {...provided.dragHandleProps}
                             {...provided.draggableProps}
                             ref={provided.innerRef}
-                            style={{ ...provided.draggableProps.style }}                            
+                            style={{ ...provided.draggableProps.style }}
                           >
                             {task.content}
                           </div>
@@ -47,12 +55,13 @@ export default function Home() {
                       </Draggable>
                     ))}
                   </div>
+                  {provided.placeholder}
                 </div>
               )}
             </Droppable>
           ))}
+          </DragDropContext>
         </div>
-      </DragDropContext>
     </div>
   )
 }
