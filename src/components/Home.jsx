@@ -26,7 +26,6 @@ export default function Home() {
 
   function onDragEnd(result) {
     const columnsDeepCopy = JSON.parse(JSON.stringify(columns))
-    console.log(result)
 
     for (let i = 0; i < columnsDeepCopy.length; i++) {
       if (
@@ -65,7 +64,6 @@ export default function Home() {
   }
 
   const handleAdd = () => {
-  console.log('caiu no add')
 
     const columnsDeepCopy = JSON.parse(JSON.stringify(columns))
     
@@ -82,7 +80,6 @@ export default function Home() {
 
 
   const handleUpdate = () => {
-  console.log('caiu no update')
   const columnsDeepCopy = JSON.parse(JSON.stringify(columns))
 
   for (let i = 0; i < columnsDeepCopy.length; i++) {
@@ -95,6 +92,21 @@ export default function Home() {
   setColumns(columnsDeepCopy)
   closeModal()
  }
+
+ const handleDelete = (task) => {
+  const columnsDeepCopy = JSON.parse(JSON.stringify(columns))
+  setTask(task)
+
+  for (let i = 0; i < columnsDeepCopy.length; i++) {
+    for (let j = 0; j < columnsDeepCopy[i].tasks.length; j++) {
+      if (columnsDeepCopy[i].tasks[j].id === task.id) {
+
+        columnsDeepCopy[i].tasks.splice(j, 1)
+        setColumns(columnsDeepCopy)
+      }
+    }
+  }  
+ }
  
   const inputChange = (e) => {
     setModalContent(e.target.value)
@@ -103,17 +115,13 @@ export default function Home() {
 
   const handleModalEdit = (task) => {
     setClickHandler(false)
-    console.log('chamou o handleModalEdit')
-    console.log(clickHandler)
     setModalContent(task.content)
     setTask(task)
     openModal()
   }
 
-  const handleSendClick = () => {
-    console.log(clickHandler)
-    clickHandler ? handleAdd() : handleUpdate()
-  }
+  const handleSendClick = () => clickHandler ? handleAdd() : handleUpdate()
+  
 
   Modal.setAppElement('#root')
 
@@ -157,6 +165,7 @@ export default function Home() {
                               >
                                 {task.content}
                                 <button onClick={() => handleModalEdit(task)}>edit</button>
+                                <button onClick={() => handleDelete(task)}>delete</button>
                               </div>
                             )}
                           </Draggable>                          
