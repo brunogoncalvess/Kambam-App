@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd"
 import Modal from "react-modal"
 
+import { v4 as uuidv4 } from 'uuid';
 
 import "./Home.css"
 
@@ -51,7 +52,37 @@ export default function Home() {
   }
 
   // MODAL 
- const handleUpdate = () => {
+  const [modalContent, setModalContent] = useState('')
+  const [task, setTask] = useState('')
+  const [column, setColumn] = useState('')
+  const [clickHandler, setClickHandler] = useState(true)
+
+  const handleModalAdd = (column) => {
+    setClickHandler(true)
+    setModalContent('')
+    openModal()
+    setColumn(column)
+  }
+
+  const handleAdd = () => {
+  console.log('caiu no add')
+
+    const columnsDeepCopy = JSON.parse(JSON.stringify(columns))
+    
+    if (modalContent) {
+      columnsDeepCopy.filter(columnCopy => {
+        if (columnCopy.id === column.id) {
+          columnCopy.tasks.push({id: uuidv4(), content: modalContent})
+        }
+      })
+      setColumns(columnsDeepCopy)
+    }
+    closeModal()
+  }
+
+
+  const handleUpdate = () => {
+  console.log('caiu no update')
   const columnsDeepCopy = JSON.parse(JSON.stringify(columns))
 
   for (let i = 0; i < columnsDeepCopy.length; i++) {
@@ -69,13 +100,19 @@ export default function Home() {
     setModalContent(e.target.value)
   }
 
-  const [modalContent, setModalContent] = useState('')
-  const [task, setTask] = useState('')
 
-  const handleModal = (task) => {
+  const handleModalEdit = (task) => {
+    setClickHandler(false)
+    console.log('chamou o handleModalEdit')
+    console.log(clickHandler)
     setModalContent(task.content)
     setTask(task)
     openModal()
+  }
+
+  const handleSendClick = () => {
+    console.log(clickHandler)
+    clickHandler ? handleAdd() : handleUpdate()
   }
 
   Modal.setAppElement('#root')
@@ -109,11 +146,8 @@ export default function Home() {
                     <div ref={provided.innerRef}>
                       <div className="column">
                         {column.tasks.map((task, index) => (
-                          <Draggable
-                            draggableId={task.id.toString()}
-                            index={index}
-                            key={task.id}
-                          >
+                          <>
+                          <Draggable draggableId={task.id.toString()} index={index} key={task.id}>
                             {provided => (
                               <div
                                 {...provided.dragHandleProps}
@@ -122,13 +156,14 @@ export default function Home() {
                                 style={{ ...provided.draggableProps.style }}
                               >
                                 {task.content}
-                                <button onClick={() => handleModal(task)}>edit</button>
+                                <button onClick={() => handleModalEdit(task)}>edit</button>
                               </div>
                             )}
-                          </Draggable>
+                          </Draggable>                          
+                        </>
                         ))}
                       </div>
-                        <span>+ Add Task</span>
+                        <span onClick={() => handleModalAdd(column)} >+ Add Task</span>
                       {provided.placeholder}
                     </div>
                   )}
@@ -140,8 +175,8 @@ export default function Home() {
       </div>
 
       <Modal isOpen={modalIsOpen} onRequestClose={closeModal}>
-        <input type="search" name="" id="" defaultValue={modalContent} onChange={e => inputChange(e)}/>
-        <button onClick={handleUpdate}>Update</button>
+        <input type="search" autoFocus defaultValue={modalContent} onChange={e => inputChange(e)}/>
+        <button onClick={handleSendClick}>Send</button>
       </Modal>
     </div>
   )
