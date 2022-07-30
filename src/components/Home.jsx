@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd"
 import Modal from "react-modal"
 
@@ -21,8 +21,19 @@ const initialColumns = [
   { id: 3, title: "Done", tasks: [] },
 ]
 
+
 export default function Home() {
   const [columns, setColumns] = useState(initialColumns)
+
+  useEffect(() => {
+    localStorage.columns ? setColumns(JSON.parse(localStorage.columns)) : setColumns(initialColumns)
+  }, [])
+
+
+  useEffect(() => {
+    localStorage.setItem('columns', JSON.stringify(columns))
+  }, [columns])
+
 
   function onDragEnd(result) {
     const columnsDeepCopy = JSON.parse(JSON.stringify(columns))
