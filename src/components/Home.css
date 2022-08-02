@@ -1,5 +1,14 @@
+:root {
+    --my-tomato: rgba(255, 99, 71, 0.7);
+    --ice-color: rgb(185, 197, 197);
+}
+
 * {
     box-sizing: border-box;
+}
+
+body {
+    overflow-y: scroll;
 }
 
 .wrapper {
@@ -12,31 +21,190 @@
     text-align: center;
     display: flex;
     flex-direction: row;
-    gap: 15rem
+    gap: 15rem;
+    color:var(--ice-color);
+    font-weight: lighter;
+}
+
+.add-task-button {
+    color:var(--ice-color);
+    cursor: pointer;
+    font-weight: lighter;
+    transition: font-weight .2s ease-in-out;
+}
+
+.add-task-button:hover {
+    font-weight: normal;
 }
 
 .container {
     display: flex;
     flex-direction: row;
     gap: 3rem;
-    margin: 0 auto
+    margin: 0 auto;
+    min-height: 92vh;
+}
+
+.column-wrapper {
+    margin-bottom: 3rem;
 }
 
 .column {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: rgb(185, 197, 197);
-    height: 450px;
-    width: 250px;
+    background-color: rgba(255, 255, 255, 0.07);
+    min-height: 400px;
+    width: 300px;
+    position: relative;
 }
 
-.column > div {
-    margin: .4rem 0;
+.column::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(5px);
+    z-index: -2;
+}
+
+
+.column .taks {    
+    margin-top: .8rem;
     display: flex;
     align-items: center;
-    padding-left: 1rem;
-    background-color:rgb(144, 187, 189);
-    height: 40px;
-    width: 235px;
+    justify-content: space-between;
+    gap: .3rem;
+    padding: .8rem;
+    background-color: var(--my-tomato);
+    min-height: 40px;
+    width: 90%;
+    font-size: 1.2rem;
+}
+
+.taks span {
+    display: block;
+    max-width: 78%;
+    word-wrap: break-word;
+}
+
+
+.card-spacing {
+    width: 100%;
+    height: .8rem;
+}
+
+.button-container {
+    display: flex;
+}
+
+.task-button {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.task-icon {
+    font-size: 1.05rem;
+}
+
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);    
+    width: 30rem;
+    height: 20rem;
+    background-color: rgba(33, 33, 34, 0.678);
+    backdrop-filter: blur(5px);
+}
+
+.modal textarea {
+    display: block;
+    width: 85%;
+    height: 8rem;
+    padding: .5rem;
+    font-size: 1.2rem;
+    margin: 0 auto;
+    margin-top: 4rem;
+    outline: none;
+    resize: none;
+}
+
+.modal-x {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 2.3rem;
+    cursor: pointer;
+}
+
+.modal button {
+    display: block;
+    margin: 0 auto;
+    margin-top: 2.3rem;
+    width: 12rem;
+    height: 3rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    background-color: rgb(43, 40, 40);
+    color: var(--ice-color);
+    border: none;
+    transition: all .4s ease-in-out;
+}
+
+.modal button:hover {
+    background-color: rgb(26, 24, 24);
+    color: white;
+}
+
+footer {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    color:var(--ice-color);
+    margin: 0 auto;
+    text-align: center;
+}
+
+footer a {
+    font-size: 1.78rem;
+    color: var(--my-tomato);
+    transition: color .3s ease-in-out;
+}
+
+footer a:hover{
+    color: tomato;
+}
+
+.footer-links {
+    display: flex;
+    gap: 1rem;
+}
+
+footer span {
+    color: var(--my-tomato);
+    font-size: 1.2rem;
+}
+
+@media (max-width: 1013px) {
+    .container {
+        flex-direction: column;
+        gap: .2rem;
+    }
+    .column-wrapper {
+        margin-bottom: 0;
+    }
+
+    .column {     
+        min-height: 200px;
+    }
+
+    footer {
+        margin-top: 3rem;
+    }
 }
