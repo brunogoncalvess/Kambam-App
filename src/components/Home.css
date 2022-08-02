@@ -204,6 +204,10 @@ footer span {
         min-height: 200px;
     }
 
+    .modal {
+        width: 20rem;
+    }
+
     footer {
         margin-top: 3rem;
     }
